@@ -1,0 +1,195 @@
+|----------------------------------------------
+|Fichier a inclure dans un programme assembleur beta.
+|Permet d'utiliser les macros suivants
+|
+|RDINT()
+|WRINT()
+|
+|Necessite : ".include beta.uasm" avec ".options tty"
+|
+|References : lib_in_out de Pierard Sebastien
+|
+|Auteur : A. Roussanaly
+|Date : avril 2014
+|(c) Universite de Lorraine
+|---------------------------------------------
+    BR(intiofin)
+
+.macro RDINT () {
+    ALLOCATE(1)     |resultat de la fonction en sommet de pile
+    CALL(lire)      |activation de la fonction "lire"
+    POP(R0)         |transfert du resultat dans R0
+}
+
+.macro WRINT () {
+    PUSH(R0)
+    CALL(ecrire)
+    POP(R0)         |<- bug fixed (ligne rajoutee 4avr.18)
+}
+
+|lecture d'un entier
+|--------------------------------------------------------------
+lire :
+    
+|prologue
+    PUSH(LP)
+    PUSH(BP)
+    MOVE(SP,BP)
+|registres
+    PUSH(R0)    |caractere lu         
+    PUSH(R1)    |signe (+1 ou -1)
+    PUSH(R2)    |valeur de car
+    PUSH(R3)    |tmp
+    PUSH(R4)    |resultat
+
+
+intio_init :
+    CMOVE(0,R4)
+    
+|prompt
+    CMOVE('?', R0)
+    WRCHAR()
+    CMOVE(' ', R0)
+    WRCHAR()
+    
+|signe
+    CMOVE(1, R1)                |SIGN=+1
+    RDCHAR ()                   |read R0
+    WRCHAR()                    |echo
+    CMPEQC (R0 ,'+' ,R3)        | if +
+    BT(R3, intio_plus)          |goto plus
+    CMPEQC (R0, '-' ,R3)        |if -
+    BT(R3, intio_moins)         |goto moins
+    BR (intio_num1)             |else goto num1
+intio_moins :
+    CMOVE (-1 , R1)             |SIGN=-1
+intio_plus :                
+    RDCHAR()                    |read next CAR
+    WRCHAR()                    |echo
+
+intio_num1 :
+    CMPLTC(R0, '0', R3)         |if !num
+    BT(R3, intio_err)           |goto err
+    CMPLEC(R0, '9', R3)
+    BF(R3, intio_err)
+    SUBC (R0, '0', R2)
+    
+    CMPLEC(R4, 0x7FFF/10, R3)      | RES = 10* RES + VAL
+    BF(R3, intio_err)              | if not overflow
+    MULC(R4, 10, R4)
+    CMOVE(0x7FFF,R3)
+    SUB(R3, R0, R3)
+    CMPLE(R4, R3, R3)
+    BF(R3, intio_err)
+    ADD(R4, R2, R4)
+ 
+intio_numx:
+    RDCHAR()                    |read next CAR
+    WRCHAR()                    |echo
+    CMPEQC (R0, '\n', R3)
+    BT(R3, intio_end)
+    
+    CMPLTC(R0, '0', R3)        |if !num
+    BT(R3, intio_err)          |goto err
+    CMPLEC(R0, '9', R3)
+    BF(R3, intio_err)
+    SUBC (R0, '0', R2)
+    
+    CMPLEC(R4, 0x7FFF/10, R3)
+    BF(R3, intio_err)
+    MULC(R4, 10, R4)
+    CMOVE(0x7FFF,R3)
+    SUB(R3, R2, R3)
+    CMPLE(R4, R3, R3)
+    BF(R3, intio_err)
+    ADD(R4, R2, R4)
+    
+    BR(intio_numx)              |iterate
+
+intio_err :
+    CMOVE('\n', R0)
+    WRCHAR ()
+    BR(intio_init)
+    
+intio_end :
+    CMOVE('\n', R0)
+    WRCHAR()
+    MUL (R4, R1, R4)
+    PUTFRAME(R4,-4*(3))
+
+|epilogue
+    POP(R4)
+    POP(R3)
+    POP(R2)
+    POP(R1)
+    POP(R0)
+    POP(BP)
+    POP(LP)
+    RTN()
+
+
+|ecriture d'un entier
+|-----------------------------------------------------------------
+
+ecrire:
+     
+|prologue
+	    PUSH(LP)
+	    PUSH(BP)
+	    MOVE(SP,BP)
+|registres
+	   PUSH(R0)             |car a ecrire       
+ 	   PUSH(R1)             |compteur
+ 	   PUSH(R2)             |valeur 
+ 	   PUSH(R3)             |tmp 
+ 	   PUSH(R4)             |tmp 
+ 	   PUSH(R5)             |tmp 
+
+	GETFRAME(-4*(2+1), R2)  |recuperer la valeur
+	CMPLTC(R2, 0, R3)       |si negatif 
+	BF(R3, intio_positif)
+	CMOVE('-' , R0)         |afficher -
+	WRCHAR()                |
+	MULC(R2, -1, R2)        |changer de signe (+) 
+
+intio_positif:
+        CMOVE(0,R1)
+intio_tq1:
+        CMPLTC(R2, 10, R3)      |tq R2 < 10
+        BT(R3,intio_ftq1)       |
+        DIVC(R2,10,R4)          |R2 = R2/10
+        MULC(R4,10,R5)          |
+        SUB(R2,R5,R0)           |R0 = R2 mod 10
+        PUSH(R0)                |empiler R0
+        ADDC(R1,1,R1)           |R1++
+        MOVE(R4,R2)             |
+        BR(intio_tq1)           |
+intio_ftq1:
+        PUSH(R2)                |empiler R2
+        ADDC(R1,1,R1)           |R1++
+intio_tq2:
+        CMPEQC(R1,0,R3)         |tq R1<>0
+        BT(R3,initio_ftq2)         |
+        POP(R0)                 |afficher(depiler())
+        ADDC(R0,'0',R0)         |
+        WRCHAR()                |
+        SUBC(R1,1,R1)           |R1--
+        BR(intio_tq2)           |
+initio_ftq2:
+        CMOVE('\n',R0)
+        WRCHAR()
+|epilogue
+    POP(R5)
+    POP(R4)
+    POP(R3)
+    POP(R2)
+    POP(R1)
+    POP(R0)
+    POP(BP)
+    POP(LP)
+    RTN()
+
+|----------------
+|    FIN
+|----------------
+intiofin:

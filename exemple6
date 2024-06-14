@@ -1,0 +1,56 @@
+.include beta.uasm
+.include intio.uasm
+.options tty
+	CMOVE(pile, SP)
+	BR(begin)
+i:	LONG(0)
+n:	LONG(5)
+begin:
+	CALL(main)
+	HALT()
+	
+main:	
+	CMOVE(0,R0)
+	PUSH(R0)
+	POP(R0)
+	ST(R0,i)
+	
+	
+tantQue_a_1:
+|i<n	
+	LD(i,R0)
+	PUSH(R0)
+	LD(n,R0)
+	PUSH(R0)
+	POP(R1)
+	POP(R0)
+	CMPLT(R0,R1,R2)
+	PUSH(R0)
+	BF(R2, fin_tantQue)
+	LD(i,R0)
+	PUSH(R0)
+	POP(R0)
+	
+	WRINT()
+|i=i+1	
+|i+1
+	LD(i,R0)
+	PUSH(R0)
+	CMOVE(1,R0)
+	PUSH(R0)
+	POP(R2)
+	POP(R1)
+	ADD(R2,R1,R0)
+	PUSH(R0)
+	POP(R0)
+	ST(R0,i)
+	
+	
+	BR(tantQue_a_1)
+	
+fin_tantQue:
+return_main:
+	|POP(BP)
+	|POP(LP)
+	|RTN()
+pile:

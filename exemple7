@@ -1,0 +1,79 @@
+.include beta.uasm
+.include intio.uasm
+.options tty
+
+	CMOVE(pile,SP)
+	BR(begin)
+
+a:
+	LONG(10)
+begin:
+	CALL(main)
+	HALT()
+main:
+	 
+	
+	|PUSH(LP)
+	|PUSH(BP)
+	|MOVE(SP,BP)
+	ALLOCATE(1)
+	
+	CMOVE (3, R0)
+	PUSH(R0)
+	
+	CALL(f)
+	LD(a, R0)
+	PUSH( R0) | a = f
+
+	POP(R0)
+	WRINT()
+	DEALLOCATE(1)
+return_main:
+	 |POP(BP)
+	 |POP(LP)
+	 |RTN()
+
+f:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP,BP)
+
+	
+	ALLOCATE(2)
+	CMOVE(1,R0)
+	PUSH(R0)	
+	POP(R0)
+	PUTFRAME(R0,4) 	|  ==> local x = 1 
+	PUSH(R0)
+	WRINT()
+	CMOVE(1,R0)
+	PUSH(R0)
+	POP(R0)
+	PUTFRAME(R0,8)	| ==> local y = 1 
+	PUSH(R0)
+	WRINT()
+	POP(R2)
+	POP(R1)	     | x + y
+	ADD(R1,R2,R0)
+	PUSH(R0)
+	WRINT()
+	GETFRAME(R0, -8)	| parameter i 
+	PUSH(R0)
+	WRINT()
+	POP(R2)
+	POP(R1)
+	ADD(R1,R2,R0)	| x + y + i
+	PUSH(R0)
+	WRINT()
+	POP(R0)
+	ST(R0,a)	|a=x+y+i
+	
+	DEALLOCATE(2)
+return_f:
+	 |POP(BP)
+	 |POP(LP)
+	 |RTN()
+
+pile:
+
+fin:
