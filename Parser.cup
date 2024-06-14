@@ -1,0 +1,432 @@
+package generated.fr.ul.miage.expression;
+import java_cup.runtime.Symbol;
+import fr.ul.miage.arbre.Noeud;
+import fr.ul.miage.arbre.Si;
+import fr.ul.miage.arbre.Appel;
+import fr.ul.miage.arbre.Retour;
+import fr.ul.miage.arbre.TantQue;
+import fr.ul.miage.arbre.Bloc;
+import fr.ul.miage.arbre.Ecrire;
+import fr.ul.miage.arbre.Lire;
+import fr.ul.miage.arbre.Moins;
+import fr.ul.miage.arbre.Affectation;
+import fr.ul.miage.arbre.Prog;
+import fr.ul.miage.arbre.Fonction;
+import fr.ul.miage.arbre.Const;
+import fr.ul.miage.arbre.Plus;
+import fr.ul.miage.arbre.Multiplication;
+import fr.ul.miage.arbre.Division;
+import fr.ul.miage.arbre.Superieur;
+import fr.ul.miage.arbre.SuperieurEgal;
+import fr.ul.miage.arbre.InferieurEgal;
+import fr.ul.miage.arbre.Egal;
+import fr.ul.miage.arbre.Different;
+import fr.ul.miage.arbre.Idf;
+import java.util.LinkedList;
+import fr.ul.miage.TDS.TDS;
+import fr.ul.miage.TDS.Symbole;
+import java.util.List;
+import fr.ul.miage.arbre.Inferieur;
+parser code{:
+	public Noeud res=null;
+:}
+/*les terminaux*/
+/* AO: accolade ouvrante*/
+/*AF: accolade fermante*/
+/*PV : point virgule */
+/*LBRACKET LR*/
+/*RBRACKET  RR*/
+terminal String IDF;
+terminal AO,AF, PO,PF, PLUS,MUL, DIV,MOINS,READ,WRITE, CALL, SUP, INFER, SUPEQ, INFEREQ, EQUAL, RETURN, AFF, ELSE, IF, WHILE,  PROGRAM, FONCTIONNAME, DIFF, CONST, INSTRUCTION, BLOC, VIRGULE, INT, FLOAT, CHAR, BOOLEAN, VOID, STRING, AND,OR, NOT, PV, RR, LR;/*à revoir si je rajouterai des choses */
+/*les non terminaux*/
+/*PROG, FONCTION, BLOC,
+			AFF, SI,  TQ, ECR, RET,
+			PLUS, MOINS, DIV, MUL,
+			SUP, INF, SUPE, INFE, EG, DIF,
+			IDF, CONST, LIRE, APPEL*/
+non terminal langage;
+non terminal Noeud bloc;
+non terminal List<Noeud> liste_fonction;
+non terminal Noeud program;
+non terminal List<Idf>liste_var_global;
+non terminal List<Idf> liste_var_locales;
+non terminal List<Idf> liste_parametre;
+non terminal Noeud call;
+non terminal Noeud affectation;
+non terminal Noeud if;
+non terminal Noeud while;
+non terminal Noeud fonction;
+non terminal Noeud return;
+non terminal Noeud plus;
+non terminal Noeud moins;
+non terminal Noeud multiplication;
+non terminal Noeud division;
+non terminal Noeud egale;
+non terminal Noeud different;
+non terminal List<Noeud> liste_blocs;
+non terminal Idf var_locale;
+non terminal Idf parametre;
+non terminal Idf variable_globale;
+non terminal List<Idf>liste_idf;
+non terminal Noeud instruction_lire;
+non terminal Noeud expression_lire;
+non terminal Noeud const;
+non terminal Noeud ecrire;
+non terminal Noeud liste_instruction;
+non terminal Noeud liste_expression;
+non terminal Noeud expression;
+non terminal Noeud instruction;
+non terminal Noeud elsebloc;
+non terminal Noeud expBool;
+non terminal Noeud condition;
+non terminal Noeud facteur;
+non terminal Const atome;
+non terminal List<Const>liste_atome;
+non terminal  si, alternative, repetitive, definition,type, suite, type_base;
+start with program;
+/* productions*/
+langage::=program:p {: RESULT=p:}
+ 	;
+ 	/*revoir grammaire program*/
+program ::=PROGRAM AO liste_var_global:lg liste_fonction:lf AF{:
+																  Prog prog = new Prog();
+  																	for (Noeud fon : lf) {
+   																	 prog.ajouterUnFils(fon);
+ 																	 }
+ 																	 RESULT = prog;
+																		:}
+	;
+	
+	
+	
+
+liste_fonction::= type:t fonction:f liste_fonction:lf{:List<Noeud> result=new LinkedList<Noeud>();
+													for(Noeud fon:lf){
+														result.add(fon);
+														result.addAll(lf);
+														TDS tds=new TDS();
+															tds.ajouterFonction(f,t,f.getNbParams(), f.getNbLocal());
+														RESULT=result;
+														}
+														:}
+	|
+	{:
+	RESULT=new LinkedList<Noeud>();
+	:}
+	;
+
+liste_var_global::=type:t IDF:i liste_var_global:lvg{:
+  											List<Idf> result = new LinkedList<Idf>();
+ 											 Idf idf = new Idf(i); 
+  												result.add(idf);
+ 												 result.addAll(lvg);
+ 												 TDS tds = new TDS();
+  													tds.ajouterVariableGlobale(idf, t, idf.getValue());
+  													RESULT = result;
+															:}
+
+	|
+	{:
+	RESULT=new LinkedList<Idf>();
+	:}
+	;
+
+liste_var_locales::=type :t IDF:c liste_var_locales:lvl{: List<Idf> result=new LinkedList<Idf>();
+														for(Idf id:lvl){
+															result.add(id);
+															result.addAll(lvl);
+															TDS tds=new TDS();
+															tds.ajouterVariableLocale(id, t,id.getScope(), id.getRang());
+															RESULT=result;
+
+
+																}
+													:}
+													
+	|
+	{:
+	RESULT=new LinkedList<Idf>();
+	:}
+	;
+	
+
+liste_parametre::=type:t IDF:i{:courant=i:} liste_parametre:lp suite:s{: List<Idf> result=new LinkedList<Idf>();
+														for(Idf id:lp){
+															result.add(id);
+															result.addAll(lp);
+														TDS tds=new TDS();
+															tds.ajouterParam(i, t,i.getScope(), i.getRang());
+															RESULT=	result;
+				
+																}/*demain voir le prof pour ca aussi*/
+
+											:}
+	| {:RESULT=new LinkedList< Idf>():}									
+	;
+
+liste_idf::=type:t liste_idf:li IDF: i{:List<Idf> result=new LinkedList<Idf>();
+											for(Idf idf:li){
+												result.add(idf);
+												result.addAll(idf);
+													TDS tds=new TDS();
+														tds.ajouterFonction(i, t, i.getNbParams(),i.getNbLocal());
+														tds.ajouterVariableGlobale(i, t,i.getValue());
+														tds.ajouterVariableLoacale(i, t,i.getScope(), i.getRang());
+														tds.ajouterParam(i, t,i.getScope(), i.getRang());
+														RESULT=result;
+														}
+										:}
+ 			|{: RESULT=new LinkedList<Idf>();:}
+ 			;
+fonction::=type:t IDF:i{:courant=i:} PO liste_parametre:lp PF AO liste_var_locales:lvl liste_instruction: li AF{:TDS tds =new TDS();
+																												tds.ajouterFonction(i, t, i.getNbParams(), i.getNbLocal());
+																												Fonction fonct=new Fonction(i.getLabel());
+																												fonct.ajouterDesfils(li);
+																												RESULT=fonct;
+																												
+																												:}
+		;
+liste_instruction::=instruction:in liste_instruction:lin{:List<Noeud> result=new LinkedList<Noeud>();
+																	result.add(in);
+																	result.add(lin);
+																	RESULT=result;
+																	:}
+	|
+	{:
+	RESULT=new LinkedList<Noeud>;
+	:}
+	;
+instruction::= affectation: a {: RESULT=a; :}
+	| ecrire: e{: RESULT=e;:}
+	| while: w{: RESULT=w; :}
+	| si:s{:RESULT=s;:}
+	|bloc:b{:RESULT=b; :}
+	| return:r{:RESULT=r; :}
+	| instruction_lire:l{:RESULT=l; :}
+	;
+	
+
+affectation::=IDF:i AFF expression:e{:Affectation aff=new Affectation();
+										aff.setFilsGauche(i);
+										aff.setFilsDroit(e);
+										RESULT=aff;
+									:}
+	;
+
+return::=RETURN  PO expression:e PF{:Retour ret=new Retour(e); RESULT=ret;:}
+	| RETURN IDF:i PO expression:e PF{:Retour ret=new Retour(i);
+												ret.setLeFils(e);
+											RESULT=ret;
+											:}
+	;
+
+ecrire::=WRITE expression:e{: Ecrire ecrire=new Ecrire(); 
+							ecrire.ajouterUnFils(e);
+							RESULT=ecrire;
+						:}
+	;
+
+
+
+expression::= expression:e PLUS facteur:f{: Plus plus=new Plus(); 
+										plus.setFilsGauche(e);
+										plus.setFilsDroit(f);
+										RESULT=plus;
+										:}
+	| expression:e MOINS facteur:f{:Moins moins=new Moins(); 
+									moins.setFilsGauche(e);
+									moins.setFilsDroit(f);
+									RESULT=moins;
+									:}
+	| facteur:f{:RESULT=f; :}
+	|expression_lire:l{:RESULT=l; :}
+	;
+
+facteur::=facteur:f MUL atome:a {: Multiplication mul=new Multiplication(); 
+								mul.setFilsGauche(f);
+								mul.setFilsDroit(a);
+								RESULT=mul;
+							:}
+	
+	|facteur:f DIV atome:a {:Division div=new Division();
+							div.setFilsGauche(f);
+							div.setFilsDroit(a);
+							RESULT=div;
+							:}
+	|atome:a {: RESULT=a;:}	;
+
+atome::= PO expression:e PF{:RESULT=e;:}
+	|CONST:c{:Const cons=new Const(c); RESULT=cons;:}
+	|READ:r {: Lire lire=new Lire(); RESULT=lire;  :}
+	|IDF:i {: RESULT=new Idf(i); :}
+	|call:ca {:RESULT=ca; :}
+	
+	;
+
+liste_atome::=atome:a PV liste_atome:la{:List<Const> res=new LinkedList<Const>() 
+											for(Noeud atome:la){
+												res.add(atome);
+												res.addAll(la);
+												RESULT=res;
+												}:}
+			|atome:a {:RESULT=a; :}
+			;
+
+expBool::= SUP:s {:Superieur sup=new Superieur(); RESULT=sup;:}
+	|SUPEQ:se{:SuperieurEgal supe=new SuperieurEgal(); RESULT=supe;:}
+	|INFEREQ:ie{:InferieurEgal infe=new InferieurEgal(); RESULT=infe;:}
+	|INFER:i{:Inferieur inf=new Inferieur();RESULT=inf; :}
+	|EQUAL:eq{:Egal e=new Egal();RESULT=e; :}
+	|DIFF:dif{:Different dif=new Different();RESULT=dif; :}
+	;
+ 
+
+instruction_lire::=READ:l PO PF{: Lire lire=new Lire(); RESULT=lire;:}
+	;
+
+expression_lire::=READ:l PO IDF PF{:RESULT=l; :}
+	
+	;
+
+plus::=expression:e1 PLUS expression:e2{:Plus plus=new Plus();
+									plus.setFilsGauche(e1);
+									plus.setFilsDroit(e2);
+									RESULT=plus;
+									:}
+	;
+moins::=expression:e1 MOINS expression:e2{:Moins moins=new Moins();
+										moins.setFilsGauche(e1);
+										moins.setFilsDroit(e2);
+										RESULT=moins;
+										:}
+	;
+multiplication::=expression:e1 MUL expression:e2{:Multiplication mul=new Multiplication();
+												mul.setFilsGauche(e1);
+												mul.setFilsDroit(e2);
+												RESULT=mul;
+												:}
+	;
+division::= expression:e1 DIV expression:e2{:Division div=new Division();
+											div.setFilsGauche(e1);
+											div.setFilsDroit(e2);
+											RESULT=div;
+											:}
+	;
+
+if::=IF condition:c bloc:b{:Si si=new Si();
+							si.setCondition(c);
+							si.SetBlocAlors(b);
+							RESULT=si;
+							:}
+	|IF condition:c bloc:b elsebloc:eb{:Si si=new Si();
+										si.setCondition(c);
+										si.setBlocAlors(b);
+										si.setBlocSinon(eb);
+										RESULT=si;
+										:}
+	
+	;
+
+while::= WHILE condition:c bloc :b{: TantQue tq=new TantQue();
+									tq.setCondition(c);
+									tq.setBloc(b);
+									RESULT=tq;
+									:}
+	;
+elsebloc::=ELSE bloc:b AO liste_instruction:in AF {:Bloc bloc=new Bloc();
+						bloc.ajouterUnFils(in);
+						:}
+						
+		|/*vide*/ 
+		{:
+			Bloc bloc=new Bloc();
+			RESULT=bloc;
+		:}
+		;
+
+condition::=PO expression:e1 expBool:ep expression:e2 PF{:
+														ep.setFilsGauche(e1);
+														ep.setFilsDroit(e2);
+														RESULT=ep;
+														:} 
+	;
+liste_blocs::=bloc:b liste_blocs:lb{:List<Bloc> res =new LinkedList<Bloc>();
+											res.add(b);
+											res.addAll(lb);
+											RESULT=res;
+									:}
+	|
+	
+	{:
+	RESULT=new LinkedList<Bloc>();
+	:}
+	;
+bloc::=AO liste_instruction:li AF{:RESULT=new  Bloc();
+									RESULT.ajouterUnFils(li);
+									:}
+								
+	;
+	
+	
+call::=IDF:i PO liste_expression:le PF {: Appel appel=new Appel(i);
+											appel.ajouterUnFils(le);
+											RESULT=appel;
+											:}
+
+	;
+
+parametre::=type:t IDF:i{:Idf idf=new Idf(i);
+							TDS tds=new TDS();
+							tds.ajouterParam(i, t,i.getScope(), i.getRang());
+							RESULT=idf;
+				
+																}
+						:}
+		;
+
+var_locale::=type:t IDF:i{:Idf idf=new Idf(i);
+							TDS tds=new TDS();
+							tds.ajouterVariableLocale(i, t,i.getScope(), i.getRang());
+							RESULT=idf;
+                                :}
+ 		;
+/*
+ suite::=VIRGULE type:t IDF:i suite:s{:List<Idf> idfs=new LinkedList<Idf>();
+											for(Idf i:idfs){
+												idfs.add(i);
+												idfs.addAll(s);
+													TDS tds=new TDS();
+														tds.ajouterVariableLoacale(i, t,i.getScope(), i.getRang());
+														tds.ajouterParam(i, t,i.getScope(), i.getRang());
+													RESULT=idfs;
+												}
+									:}
+
+ 		|
+			{:	
+		RESULT=new LinkedList<Idf>();
+			:}
+ 		;
+ 
+ 
+ type ::= type_base
+
+| type_base LR RR
+;
+
+type_base ::= INT 
+
+| FLOAT 
+
+| CHAR 
+
+| BOOLEAN 
+
+| VOID 
+
+| STRING 
+
+;
+*/
+
+ 
