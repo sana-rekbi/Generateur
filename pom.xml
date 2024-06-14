@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.ul.miage</groupId>
+  <artifactId>arbre</artifactId>
+  <version>0.0.6</version>
+	<properties>
+		<!-- Le code source en UTF8 -->
+		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+		<!-- Où stocker la distribution binaire -->
+		<project.bindist.dir>${project.basedir}/bindist</project.bindist.dir>
+		<!-- Nom de la classe principale -->
+		<project.main.classname>${project.groupId}.${project.artifactId}.Main</project.main.classname>
+		<!-- Nom de la classe principale -->
+		<project.bin.appname>tester</project.bin.appname>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<!-- use java 11 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.12.1</version>
+				<configuration>
+					<release>17</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- create scripts for apps -->
+				<!-- mvn package | appassembler:assemble -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<assembleDirectory>${project.bindist.dir}</assembleDirectory>
+					<programs>
+						<program>
+							<mainClass>${project.main.classname}</mainClass>
+							<id>${project.bin.appname}</id>
+						</program>
+					</programs>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- create a distribution archive -->
+				<!-- mvn install ou assembly:single -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>make-zip</id>
+						<phase>install</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>zip.xml</descriptor>
+							</descriptors>
+							<appendAssemblyId>true</appendAssemblyId>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

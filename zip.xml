@@ -1,0 +1,47 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+	<!-- Fichier descriptor pour le plugin maven-assembly-plugin  -->
+	<!-- ========================================================= -->
+	<id>src</id>
+	<!--  On crée une archive .zip -->
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<!-- Les fichiers à archiver qui se trouvent à la racine du projet -->
+		<fileSet>
+			<directory>${project.basedir}</directory>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>NOTICE*</include>
+				<include>*.xml</include>
+				<include>*.jpg</include>
+				<include>*.jpeg</include>
+				<include>*.png</include>
+			</includes>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- Les fichiers sources -->
+		<fileSet>
+			<directory>${project.basedir}/src</directory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- Le dossier samples qui contient les données pour tester -->
+		<fileSet>
+			<directory>${project.basedir}/samples</directory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- La documentation générée à partir de mkdocs -->
+		<fileSet>
+			<directory>${project.basedir}/mkdocs</directory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<!-- La distribution binaire -->	
+		<fileSet>
+			<directory>${project.basedir}/bindist</directory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+</assembly>
