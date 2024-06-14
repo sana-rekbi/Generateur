@@ -1,0 +1,49 @@
+.include beta.uasm
+.include intio.uasm 
+.options tty
+
+	CMOVE(pile,SP)
+	BR(begin)
+i:	LONG(0)
+j:	LONG(20)
+
+begin:
+	CALL(main)
+	HALT()
+
+main:	
+	
+	
+	
+	 PUSH(LP)
+	 PUSH(BP)
+	 MOVE(SP,BP)
+	
+	RDINT()       | read
+	PUSH(R0)    
+
+	POP(R0)      |raed(i)
+	ST(R0,i) 
+	
+	WRINT()  
+	
+	
+	LD(i,R0)
+	PUSH(R0)
+	LD(j, R0)       
+	PUSH(R0)     |   j
+	
+	POP(R2)                    
+	POP(R1)                    
+	ADD(R1, R2, R0)       |  i + j
+	PUSH(R0)                  
+	POP(R0)
+	WRINT()
+	
+	 POP(BP)
+	 POP(LP)
+	 RTN()
+	
+	
+pile:	
+

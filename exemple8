@@ -1,0 +1,73 @@
+.include beta.uasm
+.include intio.uasm 
+.options tty
+	CMOVE(pile,SP)
+	BR(begin)
+a:	LONG(0)
+begin:
+	CALL(main)
+	HALT()
+f:	
+	PUSH(LP)
+	 PUSH(BP)
+	 MOVE(SP,BP)
+ 	 ALLOCATE(1)
+	GETFRAME(R0, -8)		| parameter j car 4*(-1-n+rang(j))=4*(-1-2+1)=4(-2)=-8
+	PUSH(R0)
+	WRINT()
+	GETFRAME(R0, -12)		| parameter i car 4*(-1-n+rang(i))=4*(-1-2+0)=-12
+	PUSH(R0)
+	WRINT()
+	 POP(R2)                                      | x = i + j
+	POP(R1)
+	ADD(R1, R2, R0)
+	PUSH(R0)		
+	PUTFRAME(R0,-16)	| local x car 4(-n-2)=4(-2-2)=4(-4)=-16
+	PUSH(R0)
+	WRINT()
+	CMOVE(10, R0)
+	PUSH(R0)
+	WRINT()
+	POP(R2)                                      | x + 10
+	POP(R1)
+	ADD(R1, R2, R0)
+	PUSH(R0)
+	POP(R0)
+	PUTFRAME(R0,-16)                 
+
+	BR(return_f)
+return_f:
+	DEALLOCATE(1)
+return_fonction_f:
+	POP(BP)
+	POP(LP)
+	RTN()
+main:   
+	 
+	
+	|PUSH(LP)
+	|PUSH(BP)
+	|MOVE(SP,BP)
+         ALLOCATE(1)
+	
+	CMOVE (1, R0)
+	PUSH(R0)
+	
+	CMOVE (2, R0)
+	PUSH(R0)
+	
+	CALL(f)
+     	LD(a, R0)
+	PUSH( R0)
+	POP(R0)
+	WRINT()
+	
+	DEALLOCATE(1)
+return_main:
+         |POP(BP)
+	 |POP(LP)
+	 |RTN()
+
+
+	
+pile:

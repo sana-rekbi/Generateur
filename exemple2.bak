@@ -1,0 +1,21 @@
+.include beta.uasm
+.include intio.uasm
+.options tty
+	CMOVE(pile, SP)
+	BR(begin)
+i:	LONG(10)
+j:	LONG(20)
+k:	LONG(0)
+l:	LONG(0)
+begin:
+	CALL(main)
+	HALT()
+main:
+	PUSH(LP)
+	 PUSH(BP)
+	 MOVE(SP,BP)
+	 POP(BP)
+	 POP(LP)
+	  RTN()
+
+pile:
