@@ -8,6 +8,9 @@ Une analyse syntaxique qui contrôle l'agencement correct de ces tokens selon le
 La construction de l'arbre syntaxique abstrait à l’aide du package Arbre.
 La construction de la table des symboles à l’aide du package TDS.
 La génération du code assembleur correspondant à l’aide du package Génération.
+
+
+
 ![image](https://github.com/sana-rekbi/Generateur/assets/138128268/34828ea4-44aa-4f66-897f-c2ea9c43ac67)
 
 Le projet n'est toujours pas optimal et nécessite des améliorations pour que le générateur donne de bons résultats.
