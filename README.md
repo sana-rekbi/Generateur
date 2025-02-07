@@ -36,7 +36,7 @@ Voici quelques exemples visuels du processus :
 ![image](https://github.com/user-attachments/assets/08813e8b-b83a-4d4b-bb64-416c8d7d6505)  
 ![image](https://github.com/user-attachments/assets/9d1662c2-e21b-4377-901e-12c316d0f0c4)  
 
-🔗 **Autre exemple** :  
+🔗 *Organisation de contenu de projet sur Eclips** :  
 ![image](https://github.com/sana-rekbi/Generateur/assets/138128268/34828ea4-44aa-4f66-897f-c2ea9c43ac67)  
 
 ## 🚀 Améliorations futures
