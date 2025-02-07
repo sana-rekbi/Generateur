@@ -12,6 +12,7 @@ La génération du code assembleur correspondant à l’aide du package Généra
 ![image](https://github.com/user-attachments/assets/fc0dc805-2208-448d-ac3e-a8e5cf68a3c6)
 ![image](https://github.com/user-attachments/assets/66238325-4629-43dd-9bc2-36c8ca8b7291)
 ![image](https://github.com/user-attachments/assets/fd72e491-8e02-47ca-b7c2-f0936c7a6379)
+![image](https://github.com/user-attachments/assets/b99a23a6-7a83-44d6-af51-6067536da433)
 
 ![image](https://github.com/sana-rekbi/Generateur/assets/138128268/34828ea4-44aa-4f66-897f-c2ea9c43ac67)
 
