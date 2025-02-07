@@ -4,7 +4,7 @@
 
 Ce projet a pour objectif la conception et l’implémentation de la bibliothèque **GENERATION**, réalisée en s’appuyant sur les bibliothèques **TDS** et **ARBRE**. Il offre une approche pédagogique et technique pour la conversion de code en instructions d’assemblage via un **arbre syntaxique abstrait (AST)**.
 
-Tout au long du développement, nous avons exploré plusieurs aspects clés :
+Tout au long du développement, j'ai exploré plusieurs aspects clés :
 ✅ Programmation en langage assembleur 🖥️  
 ✅ Transformation d’un **arbre abstrait** en **table des symboles** 📄  
 ✅ Génération automatique du **code assembleur** à partir du code source 🎯  
