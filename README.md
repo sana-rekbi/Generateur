@@ -38,8 +38,8 @@ Voici quelques exemples visuels du processus :
 
 📌 **Exemple 7** :  
 ![image](https://github.com/user-attachments/assets/2eb6acc6-7a3c-46b0-9545-45e7cc95dcb3)  
-![image](https://github.com/user-attachments/assets/e72edd3b-b018-4ac7-b146-f42a9d06e7de)  
 ![image](https://github.com/user-attachments/assets/85ab02bf-ce99-4740-a856-57061df09c20)  
+![image](https://github.com/user-attachments/assets/e72edd3b-b018-4ac7-b146-f42a9d06e7de)  
 ![image](https://github.com/user-attachments/assets/77cc282b-cf89-4cd2-aaef-e1b59c6b3d22)  
 
 🔗 **Organisation du contenu du projet sur Eclipse** :  
