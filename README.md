@@ -9,7 +9,9 @@ La construction de l'arbre syntaxique abstrait à l’aide du package Arbre.
 La construction de la table des symboles à l’aide du package TDS.
 La génération du code assembleur correspondant à l’aide du package Génération.
 
-
+![image](https://github.com/user-attachments/assets/fc0dc805-2208-448d-ac3e-a8e5cf68a3c6)
+![image](https://github.com/user-attachments/assets/66238325-4629-43dd-9bc2-36c8ca8b7291)
+![image](https://github.com/user-attachments/assets/fd72e491-8e02-47ca-b7c2-f0936c7a6379)
 
 ![image](https://github.com/sana-rekbi/Generateur/assets/138128268/34828ea4-44aa-4f66-897f-c2ea9c43ac67)
 
