@@ -36,16 +36,13 @@ Voici quelques exemples visuels du processus :
 ![image](https://github.com/user-attachments/assets/08813e8b-b83a-4d4b-bb64-416c8d7d6505)  
 ![image](https://github.com/user-attachments/assets/9d1662c2-e21b-4377-901e-12c316d0f0c4)  
 
+📌 **Exemple 7** :  
+![image](https://github.com/user-attachments/assets/2eb6acc6-7a3c-46b0-9545-45e7cc95dcb3)  
+![image](https://github.com/user-attachments/assets/e72edd3b-b018-4ac7-b146-f42a9d06e7de)  
+![image](https://github.com/user-attachments/assets/85ab02bf-ce99-4740-a856-57061df09c20)  
+![image](https://github.com/user-attachments/assets/77cc282b-cf89-4cd2-aaef-e1b59c6b3d22)  
 
-
-📌 **Exemple 7** : 
-![image](https://github.com/user-attachments/assets/2eb6acc6-7a3c-46b0-9545-45e7cc95dcb3)
-![image](https://github.com/user-attachments/assets/e72edd3b-b018-4ac7-b146-f42a9d06e7de)
-![image](https://github.com/user-attachments/assets/85ab02bf-ce99-4740-a856-57061df09c20)
-![image](https://github.com/user-attachments/assets/77cc282b-cf89-4cd2-aaef-e1b59c6b3d22)
-
-
-🔗 *Organisation de contenu de projet sur Eclips** :  
+🔗 **Organisation du contenu du projet sur Eclipse** :  
 ![image](https://github.com/sana-rekbi/Generateur/assets/138128268/34828ea4-44aa-4f66-897f-c2ea9c43ac67)  
 
 ## 🚀 Améliorations futures
@@ -61,8 +58,7 @@ Ce projet est toujours en développement et nécessite encore des optimisations 
 
 👩‍💻 **Sana REKBI**  
 
-📌 **Repo GitHub** : [GitHub Repository](https://github.com/sana-rekbi/Generateur)  
-
 ---
 
 ✨ **Toute suggestion ou contribution est la bienvenue !** 🚀
+
